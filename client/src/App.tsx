@@ -9,6 +9,7 @@ import Loading from "@components/Loading"
 import UserContextProvider from "@contexts/UserContext"
 
 const Home = lazy(() => import("@pages/Home"))
+const Match = lazy(() => import("@pages/Match"))
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           }>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/match/:id" element={<Match />} />
             </Routes>
           </Suspense>   
         </UserContextProvider>
