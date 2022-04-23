@@ -1,12 +1,13 @@
 import { ThreeEvent } from "@react-three/fiber";
 import { useState } from "react";
 import type { CubeProps } from "./types"
+import Box from "./Box";
 
 function Cube({ position, color, size } : CubeProps) {
   const [hovering, setHover] = useState(false)
-
+ 
   return (
-    <mesh 
+    <group 
       position={position}
       onPointerEnter={(e : ThreeEvent<PointerEvent>) => {
         setHover(prev => true)
@@ -17,9 +18,8 @@ function Cube({ position, color, size } : CubeProps) {
         e.stopPropagation()
       }}
     >
-      <boxGeometry args={size}/>
-      <meshBasicMaterial color={hovering? "orange" : color ? color : "gray"} />
-    </mesh>
+      <Box color={hovering? "orange" : color ? color : "gray"} size={size} />
+    </group>
   );
 }
 

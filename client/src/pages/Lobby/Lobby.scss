@@ -1,0 +1,39 @@
+.lobby{
+  height: 100%;
+  width: 100%;
+
+  background-color: bisque;
+  display: flex;
+  flex-direction: column;
+
+  padding: 1em;
+  padding-top: 2em;
+  align-items: center;
+
+  &__title{
+  }
+
+  &__status{
+    margin: 1em 0;
+    font-weight: bold;
+    color: gray;
+  }
+
+  &__count-down{
+    height: 150px;
+  }
+
+  &__description{
+    width: 100%;
+
+    font-weight: bold;
+    color: green
+  }
+
+  .user-chess-point{
+    background-color: rgb(174, 255, 127);
+
+    border-radius: 20px;
+    border: 2px solid black;
+  }
+}
