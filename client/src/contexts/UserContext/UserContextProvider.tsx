@@ -8,7 +8,10 @@ import type {
 
 function UserContextProvider({ children }: UserContextProviderProps){
 
-  const [user, setUser] = useState<User>({ name : '' })
+  const [user, setUser] = useState<User>({
+    name : '', 
+    id : '' 
+  })
 
   return <UserContext.Provider value={{ user, setUser }}>
     { children }
