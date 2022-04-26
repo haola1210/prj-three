@@ -14,5 +14,14 @@ export default defineConfig({
       "@contexts": path.resolve(__dirname, "./src/contexts"),
       '@': path.resolve(__dirname, './src')
     }
+  },
+  server: {
+    proxy: {
+      '/api' : {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   }
 })

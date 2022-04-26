@@ -9,7 +9,7 @@ function Home() : JSX.Element {
   
   useEffect(() => {
     console.log(userState?.user)
-  }, [])
+  })
   return (
     <div className='Home'>
       <h1>Get ready!</h1>

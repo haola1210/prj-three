@@ -5,6 +5,7 @@ type UserContextProviderProps = {
 }
 
 type User = {
+  id: string
   name: string
 }
 
