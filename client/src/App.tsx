@@ -10,7 +10,7 @@ import UserContextProvider from "@contexts/UserContext";
 const Home = lazy(() => import("@pages/Home"));
 const Match = lazy(() => import("@pages/Match"));
 const Lobby = lazy(() => import("@pages/Lobby"));
-const Room = lazy(() => import("@pages/Room"));
+const RoomContainer = lazy(() => import("@pages/Room"));
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/match/:id" element={<Match />} />
-              <Route path="/room" element={<Room />} />
+              <Route path="/rooms" element={<RoomContainer />} />
               <Route path="/room/:id" element={<Lobby />} />
             </Routes>
           </Suspense>
