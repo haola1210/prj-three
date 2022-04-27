@@ -1,0 +1,53 @@
+
+.room {
+    padding: 32px 12px;
+
+    &-container {
+        max-width: 1200px;
+        margin: 0 auto;
+
+    }
+
+    &-form {
+        margin-bottom: 32px;
+
+        input, button {
+            outline: none;
+            padding: 4px 12px;
+            border: 1px solid #000;
+            border-radius: 4px;
+        }
+        button {      
+            background-color: #00a338;
+            color: #fff;
+            cursor: pointer;
+            margin-left: 12px;
+        }
+    }
+
+    &-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap:12px;
+        padding: 12px;
+        border: 1px solid #ccc;
+
+    }
+
+    &-item {
+        padding: 50px;
+        text-align: center;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+        cursor: pointer;
+        transition: .3s linear;
+
+        &:hover {
+            background-color: #eee;
+        }
+    }
+
+    &-heading {
+        margin-bottom: 12px;
+    }
+}
+
