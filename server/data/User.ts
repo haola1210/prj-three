@@ -19,6 +19,11 @@ class User {
     }
   }
 
+  deleteOne(id: string){
+    const newUsers = this.users.filter(u => u.id !== id)
+    this.users = newUsers
+    return this.users
+  }
   
 }
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { userNaming } from './service';
+import { userNaming, userTerminate } from './service';
 import { createServer } from "http"
 import { Server } from "socket.io"
 import socketController from './socket';
@@ -20,7 +20,7 @@ app.use(cors(corsOptions))
 
 
 app.post("/user-naming", userNaming)
-
+app.post("/user-terminate", userTerminate)
 
 const httpServer = createServer(app);
 

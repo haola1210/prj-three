@@ -1,13 +1,13 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./App.scss";
 
 import ErrorLogger from "@components/ErrorBoundary";
 import FullScreenContainer from "@components/FullScreen";
 import Loading from "@components/Loading";
-import UserContextProvider from "@contexts/UserContext";
-import SocketContextProvider from "@contexts/SocketContext";
+
 import { PublicRoute, PrivateRoute } from "@routes";
+import { useTerminateUser } from "./hooks";
 
 
 const Home = lazy(() => import("@pages/Home"));
@@ -16,11 +16,12 @@ const Lobby = lazy(() => import("@pages/Lobby"));
 const RoomContainer = lazy(() => import("@pages/Room"));
 
 function App() {
+  useTerminateUser()
   return (
     <div className="App">
       <ErrorLogger>
-        <SocketContextProvider>
-          <UserContextProvider>
+        {/* <SocketContextProvider>
+          <UserContextProvider> */}
             <Suspense
               fallback={
                 <FullScreenContainer>
@@ -40,8 +41,8 @@ function App() {
                 </Route>
               </Routes>
             </Suspense>
-          </UserContextProvider>
-        </SocketContextProvider>
+          {/* </UserContextProvider>
+        </SocketContextProvider> */}
       </ErrorLogger>
     </div>
   );

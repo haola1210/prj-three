@@ -1,5 +1,6 @@
-import userNaming from "./UserNaming";
+import { userNaming, userTerminate } from "./user";
 
 export {
-  userNaming
+  userNaming,
+  userTerminate
 }
