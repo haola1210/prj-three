@@ -1,7 +1,7 @@
-import User from "./User";
-
-const UserDB = new User()
+import UserDB from "./User";
+import RoomDB from "./Room";
 
 export {
-  UserDB
+  UserDB,
+  RoomDB
 }

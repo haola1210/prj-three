@@ -22,4 +22,6 @@ class User {
   
 }
 
-export default User
+const UserDB = new User()
+
+export default UserDB
