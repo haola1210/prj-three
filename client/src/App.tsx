@@ -6,6 +6,9 @@ import ErrorLogger from "@components/ErrorBoundary";
 import FullScreenContainer from "@components/FullScreen";
 import Loading from "@components/Loading";
 import UserContextProvider from "@contexts/UserContext";
+import SocketContextProvider from "@contexts/SocketContext";
+import { PublicRoute, PrivateRoute } from "@routes";
+
 
 const Home = lazy(() => import("@pages/Home"));
 const Match = lazy(() => import("@pages/Match"));
@@ -16,22 +19,29 @@ function App() {
   return (
     <div className="App">
       <ErrorLogger>
-        <UserContextProvider>
-          <Suspense
-            fallback={
-              <FullScreenContainer>
-                <Loading />
-              </FullScreenContainer>
-            }
-          >
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/match/:id" element={<Match />} />
-              <Route path="/rooms" element={<RoomContainer />} />
-              <Route path="/room/:id" element={<Lobby />} />
-            </Routes>
-          </Suspense>
-        </UserContextProvider>
+        <SocketContextProvider>
+          <UserContextProvider>
+            <Suspense
+              fallback={
+                <FullScreenContainer>
+                  <Loading />
+                </FullScreenContainer>
+              }
+            >
+              <Routes>
+                <Route element={<PublicRoute />}>
+                  <Route path="/" element={<Home />} />
+                </Route>
+                
+                <Route element={<PrivateRoute />}>
+                  <Route path="/match/:id" element={<Match />} />
+                  <Route path="/rooms" element={<RoomContainer />} />
+                  <Route path="/room/:id" element={<Lobby />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </UserContextProvider>
+        </SocketContextProvider>
       </ErrorLogger>
     </div>
   );
