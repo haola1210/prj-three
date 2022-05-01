@@ -13,7 +13,7 @@ import { useTerminateUser } from "./hooks";
 const Home = lazy(() => import("@pages/Home"));
 const Match = lazy(() => import("@pages/Match"));
 const Lobby = lazy(() => import("@pages/Lobby"));
-const RoomContainer = lazy(() => import("@pages/Room"));
+const RoomContainer = lazy(() => import("@pages/RoomContainer"));
 
 function App() {
   useTerminateUser()

@@ -2,7 +2,7 @@ import { IRoom, IUser } from "./types";
 import { v4 as uuidv4 } from 'uuid';
 
 class Room {
-  rooms : Array<IRoom> = []
+  private rooms : Array<IRoom> = []
   constructor(){}
 
   addNew(name: string, owner: IUser){
@@ -32,6 +32,11 @@ class Room {
       throw new Error("Room is not exist")
     }
   }
+
+  getAllRooms(){
+    return this.rooms
+  }
+
 }
 
 const RoomDB = new Room()

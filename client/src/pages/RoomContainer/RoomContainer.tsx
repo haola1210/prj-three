@@ -2,6 +2,11 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSocketContext, useUserContext } from "@hooks"
 import "./room.scss";
+import axios, { AxiosResponse } from "axios";
+import Room from "@components/Room";
+import { IRoom } from "@/types";
+
+
 
 const RoomContainer = () => {
   const navigate = useNavigate();
@@ -11,12 +16,7 @@ const RoomContainer = () => {
   const [roomName, setRoomName] = useState("")
 
 
-  const rooms = [
-    ...new Array(10).fill(1).map((_, i) => ({
-      roomId: i,
-      roomName: `Room ${i}`,
-    })),
-  ];
+  const [rooms, setRooms] = useState<Array<IRoom>>([])
 
   const emitCreateRoom = () => {
     socketContext?.emit("create-room", {
@@ -26,8 +26,24 @@ const RoomContainer = () => {
   }
 
   useEffect(() => {
+    axios.get('/api/rooms')
+    .then(({ data } : AxiosResponse)=> {
+      console.log(data)
+      setRooms(data.rooms)
+    })
+    .catch((error : InstanceType<typeof Error>) => {
+      console.log(error.message)
+    })
+  }, [])
+
+  useEffect(() => {
     socketContext?.on("create-room-feedback", (data) => {
       console.log(data)
+      if(data.status === 'ok'){
+        setRooms(prevs => [...prevs, data.room])
+      } else {
+        console.log(data.message)
+      }
     })
   }, [])
 
@@ -47,12 +63,16 @@ const RoomContainer = () => {
         <h3 className="room__heading">All Rooms:</h3>
         <div className="room__list">
           {rooms.map((room) => (
-            <div
-              className="room__item"
-              key={room.roomId}
-              onClick={() => navigate(`/room/${room.roomId}`)}
+            <div 
+              key={ room.id } 
+              onClick={() => navigate(`/room/${room.id}`)}
             >
-              {room.roomName}
+              <Room
+              id={room.id}
+              initNOUser = {1}
+              name={ room.name }
+              
+            ></Room>
             </div>
           ))}
         </div>
