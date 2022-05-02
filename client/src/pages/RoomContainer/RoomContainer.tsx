@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSocketContext, useUserContext } from "@hooks"
 import "./room.scss";
@@ -14,6 +14,7 @@ const RoomContainer = () => {
   const userContext = useUserContext()
 
   const [roomName, setRoomName] = useState("")
+  const lastCreatedRoom = useRef<null | IRoom>(null)
 
 
   const [rooms, setRooms] = useState<Array<IRoom>>([])
@@ -40,6 +41,10 @@ const RoomContainer = () => {
     socketContext?.on("create-room-feedback", (data) => {
       console.log(data)
       if(data.status === 'ok'){
+        if(userContext && userContext.user && userContext?.user.id === data.room.users[0].id){
+          // navigate(`/room/${data.room.id}`)
+          lastCreatedRoom.current = data.room
+        }
         setRooms(prevs => [...prevs, data.room])
       } else {
         console.log(data.message)
@@ -47,6 +52,11 @@ const RoomContainer = () => {
     })
   }, [])
 
+  useEffect(() => {
+    if(lastCreatedRoom && lastCreatedRoom.current){
+      navigate(`/room/${lastCreatedRoom.current.id}`)
+    }
+  }, [rooms])
 
   return (
     <div className="room">
@@ -68,11 +78,8 @@ const RoomContainer = () => {
               onClick={() => navigate(`/room/${room.id}`)}
             >
               <Room
-              id={room.id}
-              initNOUser = {1}
-              name={ room.name }
-              
-            ></Room>
+                room={room}
+              />
             </div>
           ))}
         </div>

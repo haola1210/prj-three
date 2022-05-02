@@ -1,9 +1,8 @@
+import { IRoom } from '@/types';
 import { ReactPropTypes } from "react"
 
 type RoomProps = {
-  id: string,
-  name: string,
-  initNOUser : number
+  room: IRoom
 }
 
 export type {

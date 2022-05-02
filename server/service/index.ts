@@ -1,8 +1,2 @@
-import { userNaming, userTerminate } from "./user";
-import { getAllRooms } from "./rooms";
-
-export {
-  userNaming,
-  userTerminate,
-  getAllRooms
-}
+export { userNaming, userTerminate } from "./user";
+export { getAllRooms, getOneRoom } from "./rooms";

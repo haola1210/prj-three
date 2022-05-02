@@ -37,6 +37,15 @@ class Room {
     return this.rooms
   }
 
+  getOneRoom(id: string){
+    const room = this.rooms.find(r => r.id === id)
+    if(room){
+      return room
+    } else {
+      throw new Error('room is not exist')
+    }
+  }
+
 }
 
 const RoomDB = new Room()
