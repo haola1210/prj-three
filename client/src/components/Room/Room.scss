@@ -14,7 +14,16 @@
     text-align: right;
   }
 
-  &:hover{
-    background-color: rgba(1, 255, 60, 0.303);
+
+  &--active{
+    &:hover{
+      background-color: rgba(1, 255, 60, 0.303);
+    }
   }
+
+  &--disable{
+    background-color: rgb(188, 188, 188);
+    border-color: lightcoral;
+  }
+
 }

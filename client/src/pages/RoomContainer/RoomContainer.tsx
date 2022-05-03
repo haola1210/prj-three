@@ -50,6 +50,10 @@ const RoomContainer = () => {
         console.log(data.message)
       }
     })
+
+    socketContext?.on('update-rooms', data => {
+      setRooms(prev => data.rooms)
+    })
   }, [])
 
   useEffect(() => {
@@ -61,6 +65,7 @@ const RoomContainer = () => {
   return (
     <div className="room">
       <div className="room__container">
+        <div className="room__heading">Hi {userContext?.user.name}</div>
         <div className="room__form">
           <h3 className="room__heading">New Room:</h3>
           <input 
@@ -74,8 +79,7 @@ const RoomContainer = () => {
         <div className="room__list">
           {rooms.map((room) => (
             <div 
-              key={ room.id } 
-              onClick={() => navigate(`/room/${room.id}`)}
+              key={ room.id }
             >
               <Room
                 room={room}

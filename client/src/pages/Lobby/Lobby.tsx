@@ -1,15 +1,27 @@
+import { useSocketContext, useUserContext } from '@hooks';
 import { IRoom } from '@/types';
 import Controls from '@components/3Ds/Controls';
 import { Box } from '@components/3Ds/Cube';
 import { Canvas } from '@react-three/fiber';
 import axios, { AxiosResponse } from 'axios';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import "./Lobby.scss"
 function Lobby() {
   const { id } = useParams()
   const [room, setRoom] = useState<null | IRoom>(null)
+  const socket = useSocketContext()
+  const userCtx = useUserContext()
+  const roomRef = useRef<IRoom | null>(null)
+  const navigate = useNavigate()
+
+  const userOutRoom = () => {
+    console.log("emit here")
+    if(roomRef.current){
+      socket?.emit("user-out-room", { user: userCtx?.user, room: roomRef.current })
+    }
+  }
 
   useEffect(() => {
     axios.get(`/api/room/${id}`)
@@ -24,6 +36,33 @@ function Lobby() {
       console.log(error)
     })
   }, [])
+
+  useEffect(() => {
+    socket?.on('user-join-room-feedback', (data) => {
+      if(data.status === 'ok' && data.room.id === roomRef.current?.id){
+        setRoom(data.room)
+      } else {
+        console.log(data.messgae)
+      }
+    })
+
+    return () => {
+      userOutRoom()
+    }
+  }, [])
+
+  useEffect(() => {
+    socket?.on('user-should-out-room', data => {
+      if(data.room.id === roomRef.current?.id && data.user.id === userCtx?.user.id){
+        navigate('/rooms')
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    roomRef.current = room
+  }, [room])
+
 
   return (
     <div className='lobby'>
