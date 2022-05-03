@@ -1,9 +1,15 @@
 import express from 'express';
-import { userNaming } from './service';
 import { createServer } from "http"
 import { Server } from "socket.io"
 import socketController from './socket';
 import cors from "cors"
+
+import { 
+  getAllRooms, 
+  userNaming, 
+  userTerminate, 
+  getOneRoom 
+} from './service';
 
 const app = express();
 const port = 4000;
@@ -20,7 +26,9 @@ app.use(cors(corsOptions))
 
 
 app.post("/user-naming", userNaming)
-
+app.post("/user-terminate", userTerminate)
+app.get("/rooms", getAllRooms)
+app.get("/room/:id", getOneRoom)
 
 const httpServer = createServer(app);
 

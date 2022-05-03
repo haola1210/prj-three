@@ -1,0 +1,29 @@
+.room-item{
+  padding: 1em;
+  border: 2px solid lightblue;
+  border-radius: 5px;
+
+  &__name{
+    font-weight: bold;
+    text-align: center;
+  }
+
+  &__no-user{
+    font-size: small;
+    color: gray;
+    text-align: right;
+  }
+
+
+  &--active{
+    &:hover{
+      background-color: rgba(1, 255, 60, 0.303);
+    }
+  }
+
+  &--disable{
+    background-color: rgb(188, 188, 188);
+    border-color: lightcoral;
+  }
+
+}

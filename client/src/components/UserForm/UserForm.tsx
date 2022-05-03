@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { useUserContext } from "@hooks"
+import { useSocketContext, useUserContext } from "@hooks"
 
 import "./UserForm.scss"
 function UserForm() {
@@ -8,6 +8,7 @@ function UserForm() {
   const [name, setName] = useState("")
   const [error, setError] = useState("")
   const userCtx = useUserContext()
+  const socket = useSocketContext()
 
   const handleNaming = () => {
     axios.post("/api/user-naming", {
@@ -18,6 +19,7 @@ function UserForm() {
         setError(data.message)
         throw new Error("fetch error")
       } else {
+        socket?.emit('user-naming', { user : data.user })
         userCtx?.setUser(data.user)
       }
       console.log(data)
