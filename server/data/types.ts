@@ -1,3 +1,5 @@
+import type { Match } from './Match' 
+
 type IUser = {
   id: string,
   name : string
@@ -9,7 +11,10 @@ type IRoom = {
   users: Array<IUser>
 }
 
+type IMatch = Match
+
 export type {
   IUser,
-  IRoom
+  IRoom,
+  IMatch
 }

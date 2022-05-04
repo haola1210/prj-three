@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { RoomDB, UserDB } from "./data";
+import { MatchManageDB, RoomDB, UserDB } from "./data";
 import { IUser, IRoom } from "./data/types";
 
 function socketController(io : Server){
@@ -42,6 +42,17 @@ function socketController(io : Server){
       io.emit('update-rooms', { rooms })
     })
 
+    socket.on("setup-match", ({ roomId, user, roomName } : { roomId : IRoom['id'], user: IUser, roomName: string }) => {
+      const match = MatchManageDB.joinMatch(roomId, user, roomName)
+      socket.join(roomId)
+      console.log(match)
+      if(match.isReady){
+        io.to(roomId).emit("setup-match-feedback", { status: 'ok', match })
+      }
+    })
+
+
+    // 
     socket.on('disconnect', async () => {
       /**
        * user terminate -> delete all room contain user -> 

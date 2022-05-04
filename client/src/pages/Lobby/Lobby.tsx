@@ -1,11 +1,12 @@
 import { useSocketContext, useUserContext } from '@hooks';
-import { IRoom } from '@/types';
+import { IRoom, IMatchPrimary } from '@/types';
 import Controls from '@components/3Ds/Controls';
 import { Box } from '@components/3Ds/Cube';
 import { Canvas } from '@react-three/fiber';
 import axios, { AxiosResponse } from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import CountDown from '@components/CountDown';
 
 import "./Lobby.scss"
 function Lobby() {
@@ -15,6 +16,8 @@ function Lobby() {
   const userCtx = useUserContext()
   const roomRef = useRef<IRoom | null>(null)
   const navigate = useNavigate()
+  const [match, setMatch] = useState<IMatchPrimary | null>(null)
+
 
   const userOutRoom = () => {
     console.log("emit here")
@@ -63,6 +66,21 @@ function Lobby() {
     roomRef.current = room
   }, [room])
 
+  useEffect(() => {
+    if(room && room.users.length === 2){
+      socket?.emit("setup-match", { 
+        roomId : room.id,  
+        roomName : room.name,
+        user : userCtx?.user
+      })
+    }
+  }, [room])
+
+  useEffect(() => {
+    socket?.on("setup-match-feedback", data => {
+      setMatch(data.match)
+    })
+  }, [])
 
   return (
     <div className='lobby'>
@@ -71,12 +89,20 @@ function Lobby() {
         room && room?.users.length === 1 && 
         <div className='lobby__status'>Waiting for opponent...</div>
       }
-      <div className='lobby__count-down'></div>
+      <div className='lobby__count-down'>{
+        match?.isReady && <CountDown />
+      }</div>
       <div className='lobby__description'> 
         Your chess: 
         <Canvas className='user-chess-point'>
-          <Controls />
-          <Box color="red" size={[1, 1, 1]} />
+          { 
+            userCtx && room && room.users.length === 2 && 
+            match && match.isReady &&
+            <>
+              <Box color={match.userChess[userCtx.user.id]} size={[1, 1, 1]} rotate={true} />
+              <Controls />
+            </>
+          }
         </Canvas>
       </div>
     </div>
