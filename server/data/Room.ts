@@ -53,7 +53,7 @@ class Room {
   }
 
   deleteRoomContainUser(userId : IUser['id']){
-    let room
+    let room : IRoom | undefined
     const rooms = this.rooms.filter(r => {
       if(!(
         (r.users[0] && r.users[0].id === userId) 

@@ -5,12 +5,15 @@ import UserContextProvider from "@contexts/UserContext";
 import SocketContextProvider from "@contexts/SocketContext";
 
 import App from './App'
+import MatchContextProvider from '@contexts/MatchContext';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
     <BrowserRouter>
       <SocketContextProvider>
         <UserContextProvider>
-          <App />
+          <MatchContextProvider>
+            <App />
+          </MatchContextProvider>
         </UserContextProvider>
       </SocketContextProvider>
     </BrowserRouter>
