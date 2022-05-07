@@ -1,7 +1,10 @@
+import { useStartGame } from '@/hooks';
 import { useEffect, useState } from 'react';
+import { CountDownProps } from './types';
 
-function CountDown() {
+function CountDown({ matchId, setGameStatus } : CountDownProps) {
   const [counter, setCounter] = useState(5)
+  const startGame = useStartGame(matchId)
 
   useEffect(() => {
     if(counter > 0){
@@ -13,6 +16,11 @@ function CountDown() {
       return () => {
         clearTimeout(countDown)
       }
+    }
+
+    if(counter === 0){
+      setGameStatus()
+      startGame()
     }
 
   }, [counter])

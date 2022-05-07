@@ -17,11 +17,15 @@ function Lobby() {
   const roomRef = useRef<IRoom | null>(null)
   const navigate = useNavigate()
   const [match, setMatch] = useState<IMatchPrimary | null>(null)
+  const isGameStart = useRef(false)
 
+  const startGame = () => {
+    isGameStart.current = true
+  }
 
   const userOutRoom = () => {
     console.log("emit here")
-    if(roomRef.current){
+    if(roomRef.current && !isGameStart){
       socket?.emit("user-out-room", { user: userCtx?.user, room: roomRef.current })
     }
   }
@@ -90,7 +94,10 @@ function Lobby() {
         <div className='lobby__status'>Waiting for opponent...</div>
       }
       <div className='lobby__count-down'>{
-        match?.isReady && <CountDown />
+        match?.isReady && <div className='lobby__status'>
+            Your opponent is ready, game will start after: {" "}
+            <CountDown matchId={match.id} setGameStatus={startGame}/>
+          </div>
       }</div>
       <div className='lobby__description'> 
         Your chess: 
