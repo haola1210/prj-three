@@ -8,7 +8,8 @@ import {
   getAllRooms, 
   userNaming, 
   userTerminate, 
-  getOneRoom 
+  getOneRoom, 
+  getOneMatch
 } from './service';
 
 const app = express();
@@ -29,6 +30,7 @@ app.post("/user-naming", userNaming)
 app.post("/user-terminate", userTerminate)
 app.get("/rooms", getAllRooms)
 app.get("/room/:id", getOneRoom)
+app.get("/match/:id", getOneMatch)
 
 const httpServer = createServer(app);
 

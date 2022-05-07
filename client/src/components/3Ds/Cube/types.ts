@@ -5,7 +5,7 @@ type CubeProps = {
   rotate? : boolean
 }
 
-type BoxProps = Omit<CubeProps, 'position'>
+type BoxProps = Omit<CubeProps, 'position'> & { position? : CubeProps['position'] }
 
 export type {
   CubeProps,

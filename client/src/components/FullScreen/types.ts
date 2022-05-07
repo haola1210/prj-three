@@ -1,6 +1,7 @@
-import { ReactChild } from 'react';
+import { CSSProperties, ReactChild } from 'react';
 type FullScreenContainerProps = {
-  children : ReactChild
+  children : ReactChild,
+  style? : CSSProperties
 }
 
 export type {

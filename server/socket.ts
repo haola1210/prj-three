@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { MatchManageDB, RoomDB, UserDB } from "./data";
-import { IUser, IRoom } from "./data/types";
+import { IUser, IRoom, IMatch } from "./data/types";
 
 function socketController(io : Server){
   const MapSocketUser : Record<string, IUser> = {}
@@ -51,6 +51,41 @@ function socketController(io : Server){
       }
     })
 
+    socket.on('user-attack', ({
+      userId, 
+      position, 
+      matchId
+    } : {
+      userId : IUser['id'], 
+      position : { 
+        x: number, 
+        y: number
+      }, 
+      matchId : IMatch['id']
+    }) => {
+      try {
+        const match = MatchManageDB.findMatch(matchId)
+        if(match === undefined) throw new Error('Match is not exist')
+
+        match.userAttack(userId, position)
+        const prevTurn = match.changeTurnAndGetPrevTurn()
+
+        console.log(match)
+        io.to(matchId).emit('user-attack-feedback', {
+          status : 'ok',
+          color: match.userChess[prevTurn],
+          match,
+          position
+        })
+
+      } catch (error : InstanceType<Error>) {
+        console.log(error.message)
+        io.to(matchId).emit('user-attack-feedback', {
+          status: 'error',
+          message: error.message
+        })
+      }
+    })
 
     // 
     socket.on('disconnect', async () => {
@@ -71,10 +106,10 @@ function socketController(io : Server){
         
         const { deletedRoom, rooms } = result
         if(deletedRoom){
-          console.log(users, deletedRoom, rooms)
           const remainUser = deletedRoom.users.find(u => u.id !== user.id)
           io.emit('user-should-out-room', { room: deletedRoom, user: remainUser })
           io.emit('update-rooms', { rooms })
+          MatchManageDB.deleteMatch(deletedRoom.id)
         }
       }
     })

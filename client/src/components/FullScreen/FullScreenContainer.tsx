@@ -2,9 +2,9 @@ import React from 'react';
 import type { FullScreenContainerProps } from './types'
 
 import "./FullScreenContainer.scss"
-function FullScreenContainer({ children } : FullScreenContainerProps) {
+function FullScreenContainer({ children, style } : FullScreenContainerProps) {
   return (
-    <div className='container'>
+    <div className='container' style={style ? style : {}}>
       { children }
     </div>
   );

@@ -6,6 +6,12 @@ function randomBin(min = 0, max = 2) {
   return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
 
+const mapColor : { [key in 'red' | 'blue'] : 1 | -1 } = {
+  red: 1,
+  blue: -1
+}
+
+
 class Match{
   users: Array<IUser> = [];
   id : IRoom['id'];
@@ -14,6 +20,7 @@ class Match{
   userChess : { [key in IUser['id']] : "red" | "blue" }
   currentTurn : IUser['id']
   isReady = false
+  matrix : number[][]
 
   constructor(id: string, roomName: string){
     this.id = id
@@ -21,6 +28,9 @@ class Match{
     this.turnControl = {}
     this.currentTurn = ""
     this.userChess = {}
+
+    // 
+    this.matrix = Array.from({ length : 10 }, () => Array.from({ length: 10 }, () => 0))
   }
 
   userJoin(user: IUser){
@@ -39,10 +49,22 @@ class Match{
     }
   }
 
-  getNextTurn(){
-    const nextTurn = this.turnControl[this.currentTurn]
+  changeTurnAndGetPrevTurn(){
+    const prevTurn = this.currentTurn
+    const nextTurn = this.turnControl[prevTurn]
     this.currentTurn = nextTurn
-    return nextTurn
+    return prevTurn
+  }
+
+  userAttack(userId : IUser['id'], position : { x: number, y: number }){
+    const userChess = this.userChess[userId]
+    const mappedValue = mapColor[userChess]
+    const { x, y } = position
+    if(this.matrix[x][y] === 0){
+      this.matrix[x][y] = mappedValue
+    } else {
+      throw new Error('Invalid position')
+    }
   }
 
 }
