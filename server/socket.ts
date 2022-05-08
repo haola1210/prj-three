@@ -38,6 +38,7 @@ function socketController(io : Server){
       console.log(`user: ${user.name} out room of ${room.users[0].name} & ${room.users[1].name}`)
       const rooms = RoomDB.deleteOne(room.id)
       const remainUser = room.users.find(u => u.id !== user.id)
+      MatchManageDB.deleteMatch(room.id)
       io.emit('user-should-out-room', { room, user: remainUser })
       io.emit('update-rooms', { rooms })
     })
@@ -45,7 +46,7 @@ function socketController(io : Server){
     socket.on("setup-match", ({ roomId, user, roomName } : { roomId : IRoom['id'], user: IUser, roomName: string }) => {
       const match = MatchManageDB.joinMatch(roomId, user, roomName)
       socket.join(roomId)
-      console.log(match)
+      // console.log(match)
       if(match.isReady){
         io.to(roomId).emit("setup-match-feedback", { status: 'ok', match })
       }
@@ -71,12 +72,19 @@ function socketController(io : Server){
         const prevTurn = match.changeTurnAndGetPrevTurn()
 
         console.log(match)
+        const wonUserId = match.checkWin(3, position)
+        console.log(wonUserId)
+
         io.to(matchId).emit('user-attack-feedback', {
           status : 'ok',
           color: match.userChess[prevTurn],
           match,
           position
         })
+
+        if(wonUserId){
+          io.to(matchId).emit('user-win', { userId: wonUserId })
+        }
 
       } catch (error : InstanceType<Error>) {
         console.log(error.message)

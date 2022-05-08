@@ -15,6 +15,7 @@ import { useMatchContext, useSocketContext, useUserContext } from '@/hooks';
 import { MatchContext } from '@contexts/MatchContext';
 import { UserContext } from '@contexts/UserContext';
 import { SocketContext } from '@contexts/SocketContext';
+import CountDown from '@components/CountDown';
 
 const style : CSSProperties = {
   position : "absolute",
@@ -38,6 +39,7 @@ function Match() {
   const socket = useSocketContext()
   const [isMyTurn, setMyTurn] = useState(false)
   const match = useMatchContext()
+  const [wonUser, setWonUser] = useState<null | IUser['id']>(null)
 
   useEffect(() => {
     axios.get(`/api/match/${id}`)
@@ -64,7 +66,26 @@ function Match() {
         }
       }
     })
+    socket?.on('user-win', data => {
+      console.log(`user: ${data.userId} won`)
+      setWonUser(data.userId)
+    })
+
+    return () => {
+      socket?.emit("user-out-room", { user: userCtx?.user, room: match.current })
+    }
   }, [])
+
+  useEffect(() => {
+    if(wonUser){
+      const t = setTimeout(() => {
+        navigate('/rooms')
+      }, 3500)
+      return () => {
+        clearTimeout(t)
+      }
+    }
+  }, [wonUser])
 
   return (
     <div className='Match' style={{ position: 'relative' }}>
@@ -84,13 +105,20 @@ function Match() {
         </SocketContext.Provider>
       </Canvas>
       { 
-        !match && <FullScreenContainer style={style}>
+        !matchExist && <FullScreenContainer style={style}>
           <Loading />
         </FullScreenContainer> 
       }
       { 
-        isMyTurn && <div className='turn'>
+        !wonUser && isMyTurn && <div className='turn'>
           Your turn!
+        </div> 
+      }
+      {
+        wonUser && <div className='turn'>
+          {`You ${userCtx?.user.id === wonUser ? 'WIN' : 'LOSE'}!`}
+          <br />
+          You will exit this room after 3s
         </div> 
       }
     </div>
