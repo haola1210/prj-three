@@ -2,8 +2,7 @@ import { ThreeEvent } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import type { CubeProps } from "./types"
 import Box from "./Box";
-import { useMatchContext, useSocketContext, useUserContext } from "@/hooks";
-import { useParams } from "react-router-dom";
+import { useMatchContext, useSocketContext, useUserContext } from "@hooks";
 
 function Cube({ position, color, size } : CubeProps) {
   const [hovering, setHover] = useState(false)
@@ -35,6 +34,7 @@ function Cube({ position, color, size } : CubeProps) {
       if(data.status === 'ok'){
         if(x === data.position.x && y === data.position.y){
           setIsAvailable(false)
+          setHover(false)
         }
       }
     })
